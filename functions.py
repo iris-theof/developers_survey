@@ -1,4 +1,8 @@
+import numpy as np
 import pandas as pd
+from matplotlib import pyplot as plt
+import seaborn as sns
+from scipy.stats import chi2_contingency
 
 
 def create_percentage(df, column_name, column_rename, melt):
@@ -13,7 +17,7 @@ def create_percentage(df, column_name, column_rename, melt):
     It creates a dataframe that contains the percentage of entries that correspond to a 'column_name' column and rows that
     correspond to Man or Woman. 
     '''
-    study_df_women = (df[df['Gender']=='Woman'][column_name].value_counts()/len(df[df['Gender']=='Woman'][column_name])*100).reset_index()
+    study_df_women=(df[df['Gender']=='Woman'][column_name].value_counts()/len(df[df['Gender']=='Woman'][column_name])*100).reset_index()
     study_df_men = (df[df['Gender']=='Man'][column_name].value_counts()/len(df[df['Gender']=='Man'][column_name])*100).reset_index()
     study_df_women.rename(columns={'index': column_rename, column_name: 'Women'}, inplace=True)
     study_df_men.rename(columns={'index': column_rename, column_name: 'Men'}, inplace=True)
@@ -26,7 +30,7 @@ def create_percentage(df, column_name, column_rename, melt):
 
     return df_new
 
- def create_frequency(df, column_name, column_rename):
+def create_frequency(df, column_name, column_rename):
     '''
     INPUT
     df - pandas dataframe
@@ -88,9 +92,9 @@ def plot(y_input, df):
     y_input - input of y axis
     df - pandas dataframe
     
-    
     Creates a boxplot with entries for Men and Women for a given input categorical variable y. 
     '''
+    
     fig = plt.figure(figsize=(10,10))
     ax = fig.add_subplot()
 
