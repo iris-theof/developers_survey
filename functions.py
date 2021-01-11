@@ -112,27 +112,27 @@ def plot(y_input, df):
     ylabels = sns_t.get_yticklabels()
     sns_t.set_yticklabels(ylabels, fontsize=18)
     
-    fig.savefig(y_input+'.pdf', bbox_inches='tight')
+    fig.savefig(y_input+'.png', bbox_inches='tight')
 
     plt.show()
     
     
-def t_test(table):
+def chi_squared_test(table):
     '''
     INPUT
-    table - contingency table 
+    table - contingency table, i.e. table that contains the observed frequencies in each category
     
     OUTPUT
-    pvalue - t-test pvalue
+    pvalue - p-value of the test, level of significance
     
-    It perofrms t-test on the input contingency table
+    It perofrms chi-squared test on the input contingency table
     and returns the pvalue according to which the null
     hypothesis (HO) is accepted or rejected
     '''
     alpha = 0.05
     pvalue = chi2_contingency(table)[1]
     if pvalue <= alpha:
-        print("Dependent (reject HO)")
+        print("The p value is: {}, i.e. smallest than the level of signficance p=0.05, thus the null hypothesis is rejected ".format(pvalue))
     else:
-        print("Independent (HO Holds)")
+        print("The p value is: {}, i.e. larger than the level of signficance p=0.05, thus the null hypothesis is accepted ".format(pvalue)) 
     return pvalue
