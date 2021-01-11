@@ -30,27 +30,30 @@ def create_percentage(df, column_name, column_rename, melt):
 
     return df_new
 
-def create_frequency(df, column_name, column_rename):
+def create_frequency(df, column_name, list_field):
     '''
     INPUT
     df - pandas dataframe
-    column_name - name of column fow which the percentage of entries will be found
-    column_rename - how to rename the index of the new dataframe
+    column_name - the column name from which it will search for the entries in list_field
+    list_field - list that contains names of the categorical variables 
 
     OUTPUT
-    study_df - dataframe 
+    table - contingency matrix
     
-    Outputs a dataframe which has in the rows the gender entries and in columns the frequency
-    of each categorical entry that corresponds to column_name column of the original dataframe df
+    Outputs a contingency table for the categorical variables in list_name
+    for the classes Woman and Man
     '''
-    study_df_women = df[df['Gender']=='Woman'][column_name].value_counts().reset_index()
-    study_df_men = df[df['Gender']=='Man'][column_name].value_counts().reset_index()
-    study_df_women.rename(columns={'index': column_rename, column_name: 'Women'}, inplace=True)
-    study_df_men.rename(columns={'index': column_rename, column_name: 'Men'}, inplace=True)
-    study_df = pd.merge(study_df_women, study_df_men, on=column_rename ).T
-    study_df.reset_index
+
+    table_w =[]
+    table_m =[]
+    for i in range(len(list_field)):
+        table_w.append( len(df[(df[column_name]==list_field[i]) & 
+                    ((df['Gender']=='Woman')) ]))
+        table_m.append( len(df[(df[column_name]==list_field[i]) & 
+               ((df['Gender']=='Man')) ]))
+        table = [table_w,table_m ]
     
-    return study_df
+    return table
 
 def show_values_on_bars(axs, h_v="v", space=0.3):
     '''
@@ -132,7 +135,7 @@ def chi_squared_test(table):
     alpha = 0.05
     pvalue = chi2_contingency(table)[1]
     if pvalue <= alpha:
-        print("The p value is: {}, i.e. smallest than the level of signficance p=0.05, thus the null hypothesis is rejected ".format(pvalue))
+        print("The p value is: {}, i.e. smaller than the level of signficance p=0.05, thus the null hypothesis is rejected. ".format(pvalue))
     else:
-        print("The p value is: {}, i.e. larger than the level of signficance p=0.05, thus the null hypothesis is accepted ".format(pvalue)) 
+        print("The p value is: {}, i.e. larger than the level of signficance p=0.05, thus the null hypothesis is accepted.".format(pvalue)) 
     return pvalue
