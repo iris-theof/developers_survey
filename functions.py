@@ -7,15 +7,17 @@ from scipy.stats import chi2_contingency
 
 def create_percentage(df, column_name, column_rename, melt):
     '''
-    It creates a dataframe that contains the percentage of entries that correspond to a 'column_name' column and rows that
-    correspond to Man or Woman. 
+    It creates a new dataframe df_new that contains the percentage of entries that correspond to each value
+    of the categorical variable column_name appears. There is not calculated one percantage for each entry
+    but two ones, one for womena and one for men.
     
     INPUT
     df - pandas dataframe
-    column_name - name of column fow which the percentage of entries will be found
+    column_name - name of column (categorical variable) fow which the percentage of its one of each entries will
+                  be calculated
     column_rename - how to rename the index of the new dataframe
-    melt - when True created a dataframe with a column Gender that could be Man or Woman
-           when False creates two columns one for Man and another one for Woman
+    melt - True : Adds a categorical column Gender to the dataframe df_new that takes values Man or Woman
+           False : creates two columns one for Man and another one for Woman
            
     OUTPUT
     df_new - new dataframe
@@ -61,7 +63,7 @@ def create_frequency(df, column_name, list_field):
 
 def show_values_on_bars(axs, h_v="v", space=0.3):
     '''
-    Displays values of numerical entries in a barplob
+    Displays values of numerical entries in a barplot
     
     INPUT
     axs - input barplot
@@ -99,7 +101,7 @@ def plot(y_input, df):
     numerical value the column 'value' of the dataframe df.
     
     INPUT 
-    y_input - categorical variable, each entries will correspond to the y axis of our parblot
+    y_input - categorical variable, each of its entries will correspond to a different bar
     df - pandas dataframe
     '''
     
