@@ -1,18 +1,17 @@
-import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 import seaborn as sns
 from scipy.stats import chi2_contingency
 
 
-def create_percentage(df, column_name, column_rename, melt):
+def create_percentage(df_cur, column_name, column_rename, melt):
     '''
-    It creates a new dataframe df_new that contains the percentage of entries that correspond to each value
-    of the categorical variable column_name appears. There is not calculated one percantage for each entry
-    but two ones, one for womena and one for men.
+    It creates a new dataframe df_new that contains the percentage of entries that correspond to each value 
+    of the categorical variable column_name appears. There is not calculated one percantage for each entry but
+    two ones, one for women and one for  men.
     
     INPUT
-    df - pandas dataframe
+    df_cur - pandas dataframe
     column_name - name of column (categorical variable) fow which the percentage of its one of each entries will
                   be calculated
     column_rename - how to rename the index of the new dataframe
@@ -23,26 +22,26 @@ def create_percentage(df, column_name, column_rename, melt):
     df_new - new dataframe
     
     '''
-    study_df_women=(df[df['Gender']=='Woman'][column_name].value_counts()/len(df[df['Gender']=='Woman'][column_name])*100).reset_index()
-    study_df_men = (df[df['Gender']=='Man'][column_name].value_counts()/len(df[df['Gender']=='Man'][column_name])*100).reset_index()
+    study_df_women = (df_cur[df_cur['Gender'] == 'Woman'][column_name].value_counts()/len(df_cur[df_cur['Gender'] == 'Woman'][column_name])*100).reset_index()
+    study_df_men = (df_cur[df_cur['Gender'] == 'Man'][column_name].value_counts()/len(df_cur[df_cur['Gender'] == 'Man'][column_name])*100).reset_index()
     study_df_women.rename(columns={'index': column_rename, column_name: 'Women'}, inplace=True)
     study_df_men.rename(columns={'index': column_rename, column_name: 'Men'}, inplace=True)
-    study_df = pd.merge(study_df_women, study_df_men, on=column_rename )
+    study_df = pd.merge(study_df_women, study_df_men, on=column_rename)
 
-    if melt == True:
-        df_new = pd.melt(study_df, id_vars=[column_rename], value_vars=['Men','Women'], var_name='Gender')
+    if melt:
+        df_new = pd.melt(study_df, id_vars=[column_rename], value_vars=['Men', 'Women'], var_name='Gender')
     else:
         df_new = study_df
 
     return df_new
 
-def create_frequency(df, column_name, list_field):
+def create_frequency(df_cur, column_name, list_field):
     '''
     Outputs a contingency table for the categorical variable column_name which takes values given in list_name
     and for the Gender variable which takes the values Woman or Man
     
     INPUT
-    df - pandas dataframe
+    df_cur - pandas dataframe
     column_name - the one out of the two categorical variables from which the continengency matrix will be build
     list_field - list that contains values of the categorical variable column_name 
 
@@ -50,14 +49,14 @@ def create_frequency(df, column_name, list_field):
     table - contingency matrix
     '''
 
-    table_w =[]
-    table_m =[]
+    table_w = []
+    table_m = []
     for i in range(len(list_field)):
-        table_w.append( len(df[(df[column_name]==list_field[i]) & 
-                    ((df['Gender']=='Woman')) ]))
-        table_m.append( len(df[(df[column_name]==list_field[i]) & 
-               ((df['Gender']=='Man')) ]))
-        table = [table_w,table_m ]
+        table_w.append(len(df_cur[(df_cur[column_name] == list_field[i]) & 
+                                  ((df_cur['Gender'] == 'Woman'))]))
+        table_m.append(len(df_cur[(df_cur[column_name] == list_field[i]) & 
+                                  ((df_cur['Gender'] == 'Man'))]))
+        table = [table_w, table_m]
     
     return table
 
@@ -71,45 +70,39 @@ def show_values_on_bars(axs, h_v="v", space=0.3):
           v the categorical variable will be displayed in x axis
     space - how much space to leave after the bar
     '''
-    def _show_on_single_plot(ax):
-        if h_v == "v":
-            for p in ax.patches:
-                _x = p.get_x() + p.get_width() / 2
-                _y = p.get_y() + p.get_height()
-                value = round(p.get_height(),1)
-                ax.text(_x, _y, value, ha="center", fontsize = 18) 
-        elif h_v == "h":
-            for p in ax.patches:
-                _x = p.get_x() + p.get_width() + float(space)
-                _y = p.get_y() + p.get_height() - float(space) / 4
-                a_number = round(p.get_width(),1)
-                value = "{}%".format(a_number)
-                if a_number > 0:
-                    ax.text(_x, _y, value, ha="left", fontsize = 18)
-                else:
-                    ax.text(_x + 5 * float(space), _y, value, ha="center", fontsize = 18)
-
-    if isinstance(axs, np.ndarray):
-        for idx, ax in np.ndenumerate(axs):
-            _show_on_single_plot(ax)
-    else:
-        _show_on_single_plot(axs)
+    
+    if h_v == "v":
+        for pos in axs.patches:
+            _x = pos.get_x() + pos.get_width() / 2
+            _y = pos.get_y() + pos.get_height()
+            value = round(pos.get_height(), 1)
+            axs.text(_x, _y, value, ha="center", fontsize=18) 
+    elif h_v == "h":
+        for pos in axs.patches:
+            _x = pos.get_x() + pos.get_width() + float(space)
+            _y = pos.get_y() + pos.get_height() - float(space) / 4
+            a_number = round(pos.get_width(), 1)
+            value = "{}%".format(a_number)
+            if a_number > 0:
+                axs.text(_x, _y, value, ha="left", fontsize=18)
+            else:
+                axs.text(_x + 5 * float(space), _y, value, ha="center", fontsize=18)
         
-def plot(y_input, df):
+def plot(y_input, df_cur):
     '''
     Creates a barplot which plots for each entry of the categorical variable 'y_input' the corresponding
-    numerical value the column 'value' of the dataframe df.
+    numerical value the column 'value' of the dataframe df_cur.
     
     INPUT 
     y_input - categorical variable, each of its entries will correspond to a different bar
-    df - pandas dataframe
+    df_cur - pandas dataframe
     '''
     
-    fig = plt.figure(figsize=(10,10))
+    fig = plt.figure(figsize=(10, 10))
     ax = fig.add_subplot()
 
     sns.set_color_codes("pastel")
-    sns_t = sns.barplot(x="value", y=y_input, hue="Gender", data=df)
+    sns_t = sns.barplot(x="value", y=y_input, hue="Gender", data=df_cur)
  
     plt.ylabel("")
     plt.xlabel("")
