@@ -7,15 +7,19 @@ from scipy.stats import chi2_contingency
 
 def create_percentage(df, column_name, column_rename, melt):
     '''
+    It creates a dataframe that contains the percentage of entries that correspond to a 'column_name' column and rows that
+    correspond to Man or Woman. 
+    
     INPUT
     df - pandas dataframe
     column_name - name of column fow which the percentage of entries will be found
     column_rename - how to rename the index of the new dataframe
     melt - when True created a dataframe with a column Gender that could be Man or Woman
            when False creates two columns one for Man and another one for Woman
+           
+    OUTPUT
+    df_new - new dataframe
     
-    It creates a dataframe that contains the percentage of entries that correspond to a 'column_name' column and rows that
-    correspond to Man or Woman. 
     '''
     study_df_women=(df[df['Gender']=='Woman'][column_name].value_counts()/len(df[df['Gender']=='Woman'][column_name])*100).reset_index()
     study_df_men = (df[df['Gender']=='Man'][column_name].value_counts()/len(df[df['Gender']=='Man'][column_name])*100).reset_index()
@@ -32,16 +36,16 @@ def create_percentage(df, column_name, column_rename, melt):
 
 def create_frequency(df, column_name, list_field):
     '''
+    Outputs a contingency table for the categorical variable column_name which takes values given in list_name
+    and for the Gender variable which takes the values Woman or Man
+    
     INPUT
     df - pandas dataframe
-    column_name - the column name from which it will search for the entries in list_field
-    list_field - list that contains names of the categorical variables 
+    column_name - the one out of the two categorical variables from which the continengency matrix will be build
+    list_field - list that contains values of the categorical variable column_name 
 
     OUTPUT
     table - contingency matrix
-    
-    Outputs a contingency table for the categorical variables in list_name
-    for the classes Woman and Man
     '''
 
     table_w =[]
@@ -57,13 +61,13 @@ def create_frequency(df, column_name, list_field):
 
 def show_values_on_bars(axs, h_v="v", space=0.3):
     '''
+    Displays values of numerical entries in a barplob
+    
     INPUT
-    axs - input boxplot
-    h_v - vertical(v) or horizontal(h)
+    axs - input barplot
+    h_v - vertical(v) or horizontal(h) positioning of the barplot, when
+          v the categorical variable will be displayed in x axis
     space - how much space to leave after the bar
-    
-    
-    Adds values of entries in boxplot
     '''
     def _show_on_single_plot(ax):
         if h_v == "v":
@@ -91,11 +95,12 @@ def show_values_on_bars(axs, h_v="v", space=0.3):
         
 def plot(y_input, df):
     '''
-    INPUT 
-    y_input - input of y axis
-    df - pandas dataframe
+    Creates a barplot which plots for each entry of the categorical variable 'y_input' the corresponding
+    numerical value the column 'value' of the dataframe df.
     
-    Creates a boxplot with entries for Men and Women for a given input categorical variable y. 
+    INPUT 
+    y_input - categorical variable, each entries will correspond to the y axis of our parblot
+    df - pandas dataframe
     '''
     
     fig = plt.figure(figsize=(10,10))
@@ -122,16 +127,18 @@ def plot(y_input, df):
     
 def chi_squared_test(table):
     '''
-    INPUT
-    table - contingency table, i.e. table that contains the observed frequencies in each category
-    
-    OUTPUT
-    pvalue - p-value of the test, level of significance
-    
     It perofrms chi-squared test on the input contingency table
     and returns the pvalue according to which the null
     hypothesis (HO) is accepted or rejected
+    
+    INPUT
+    table - contingency table, i.e. table that contains the observed frequencies of the categorical variables
+            from which we have built the contingency matrix
+    
+    OUTPUT
+    pvalue - p-value of the test, level of significance
     '''
+    
     alpha = 0.05
     pvalue = chi2_contingency(table)[1]
     if pvalue <= alpha:
