@@ -22,8 +22,9 @@ There is one notebooks available here to showcase work related to the above ques
 There is an additional `.py` file that contains the necessary methods to explore the dataset and create visualizations without resorting to code repetitions.
 
 ## Results <a name="results"></a>
-The results of this analysis are available on a Medium post [here](https://iris-theof.medium.com/who-are-the-women-developers-in-germany-976b195d643a)
-
+The results of this analysis were selected for publication at the Startup-Medium [here](https://iris-theof.medium.com/who-are-the-women-developers-in-germany-976b195d643a).
+Below it is displayed the result of the analysis on the Formal Education Level of German developers:
+![Education picture](https://github.com/iris-theof/developers_survey/blob/master/Education%20Level.png)
 ## Licensing, Authors, Acknowledgements<a name="licensing"></a>
 
 Must give credit to Stack Overflow for the data, which were retrieved from the [2020 Developer Survey](https://insights.stackoverflow.com/survey/2020). Feel free to use the code in this repository as you would like! 
